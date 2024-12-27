@@ -15,10 +15,10 @@ async function realizarTransferencia(contaOrigem, contaDestino, valor, token) {
     }
 
     if (!contaOrigemData.ativa || !contaDestinoData.ativa) {
-        throw createError(422, 'Conta de origem ou destino está inativa.');
+        throw createError(422, 'Conta de origem ou destino está ativa.');
     }
 
-    if (contaOrigemData.saldo < valor) {
+    if (contaOrigemData.saldo <= valor) {
         throw createError(422, 'Saldo insuficiente para realizar a transferência.');
     }
 
@@ -31,7 +31,6 @@ async function realizarTransferencia(contaOrigem, contaDestino, valor, token) {
     }
 
     await contasModel.atualizarSaldo(contaOrigem, -valor);
-    await contasModel.atualizarSaldo(contaDestino, valor);
     await transferenciasModel.inserirTransferencia(contaOrigem, contaDestino, valor, autenticada);
 
     return { message: 'Transferência realizada com sucesso.' };
