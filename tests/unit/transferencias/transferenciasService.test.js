@@ -1,20 +1,9 @@
 const sinon = require('sinon');
 const expect = require('chai').expect;
 const contasModel = require('../../../models/contasModel');
-const transferenciasModel = require('../../../models/transferenciasModel');
 const transferenciasService = require('../../../services/transferenciasService');
 
 describe('Testando o método realizarTransferencia', () => {
-    let getContaByIdStub;
-    let atualizarSaldoStub;
-    let inserirTransferenciaStub;
-
-    beforeEach(() => {
-        getContaByIdStub = sinon.stub(contasModel, 'getContaById');
-        atualizarSaldoStub = sinon.stub(contasModel, 'atualizarSaldo').resolves();
-        inserirTransferenciaStub = sinon.stub(transferenciasModel, 'inserirTransferencia').resolves();
-    });
-
     it('deve lançar erro quando o valor é menor que R$ 10', async () => {
         try {
             await transferenciasService.realizarTransferencia(1, 2, 9.99, null);
@@ -26,8 +15,10 @@ describe('Testando o método realizarTransferencia', () => {
     });
 
     it('deve lançar erro quando o valor for maior ou igual a R$ 10 mas a conta de origem não for encontrada', async () => {
-        getContaByIdStub.onCall(0).resolves(null);
-        getContaByIdStub.onCall(1).resolves({ ativa: true, saldo: 1000 });
+        // Preparando o Stub (Mock)
+        const getContaByIdStub = sinon.stub(contasModel, 'getContaById');
+        getContaByIdStub.withArgs(1).resolves(null);
+        getContaByIdStub.withArgs(2).resolves({ ativa: true, saldo: 1000 });
 
         try {
             await transferenciasService.realizarTransferencia(1, 2, 10, null);
