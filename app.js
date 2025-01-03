@@ -1,4 +1,6 @@
 const express = require('express');
+const morgan = require('morgan');
+const { requestLogger, captureResponseBody } = require('./middleware/logger');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./config/swagger');
 require('dotenv').config();
@@ -14,6 +16,8 @@ const app = express();
 
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(captureResponseBody);
+app.use(requestLogger);
 
 app.use('/login', loginRoutes);
 app.use('/transferencias', transferenciaRoutes);

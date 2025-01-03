@@ -22,7 +22,7 @@ function gerarToken(usuario) {
     return jwt.sign(
         { id: usuario.id, username: usuario.username },
         JWT_SECRET,
-        { expiresIn: '1h' }
+        { expiresIn: '1y' }
     );
 }
 
