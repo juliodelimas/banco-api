@@ -19,7 +19,6 @@ async function realizarTransferencia(contaOrigem, contaDestino, valor, token) {
     }
 
     if (parseFloat(contaOrigemData.saldo) < parseFloat(valor)) {
-        console.log(contaOrigemData.saldo, valor)
         throw createError(422, 'Saldo insuficiente para realizar a transferência.');
     }
 
